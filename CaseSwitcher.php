@@ -28,6 +28,12 @@ class CaseSwitcher
     private $restrictedPaths = ['/', '/home', '/var', __DIR__]; // restricted path on unix file systems
 
 
+    /**
+     * Constructor
+     *
+     * @param string $path The path to the resource
+     * @param string $case The case to rename the files to. Defaults to 'lower'
+     */
     public function __construct(string $path, string $case = 'lower')
     {
         $this->path           = realpath($path);
@@ -50,7 +56,11 @@ class CaseSwitcher
         }
     }
 
-    // Ensure the path is a valid path
+    /**
+     * Checks if the supplied path is valid
+     *
+     * @return bool True if the path is valid, False if it isn't
+     */
     private function isValid() : bool
     {
         if (!file_exists($this->path)) {
@@ -68,7 +78,11 @@ class CaseSwitcher
     }
 
 
-    // This is the function the client code will call to rename the file
+    /**
+     * Entry point to the class. Calls the appropriate rename method based on the resource type
+     *
+     * @return bool
+     */
     public function rename() : bool
     {
         if ($this->isValid()) {
@@ -86,7 +100,11 @@ class CaseSwitcher
     }
 
 
-    // Rename directory contents
+    /**
+     * Rename files inside a directory if the supplied path is a directory
+     *
+     * @return bool False if the directory is an empty one
+     */
     private function renameDirContents() : bool
     {
         if (count(scandir($this->path)) <= 2) {
@@ -114,7 +132,11 @@ class CaseSwitcher
         }
     }
 
-    // Rename file
+    /**
+     * Renames a single file if the supplied path points to a single file
+     *
+     * @return bool True if file name is converted successfully, false on failure
+     */
     private function renameFile() : bool
     {
         if (rename($this->path, "{$this->directory}/" . $this->changeCase($this->filename) . $this->fileExt)) {
@@ -125,7 +147,12 @@ class CaseSwitcher
         }
     }
 
-    // Change the case of a file
+    /**
+     * Converts filename to the requested case
+     *
+     * @param string Name of the file
+     * @return string The converted version of the filename
+     */
     private function changeCase($fileName) : string
     {
         switch ($this->caseType) {
@@ -138,8 +165,12 @@ class CaseSwitcher
         }
     }
 
-    // Get related error messages
-    public function getErrorMsg()
+    /**
+     * Get error message
+     *
+     * @return string The cuurrent error message
+     */
+    public function getErrorMsg() : string
     {
         return $this->errMsg;
     }
