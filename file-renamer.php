@@ -1,7 +1,7 @@
 <?php
 namespace caseswitcher;
 
-include 'CaseSwitcher.php';
+include 'classes/CaseSwitcher.php';
 $path = new CaseSwitcher($_POST['path'], $_POST['case-type']);    // Create a new instance of Renamer
 
 if ($path->rename()) {

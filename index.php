@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="style.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
     <title>CaseSwitcher | It's that simple...</title>
 </head>
 <body>
@@ -45,6 +45,6 @@
     <div><p id='feedback' title="Click to dismiss"></p></div>
     
     <!-- JS and AJAX -->
-    <script src="main.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
