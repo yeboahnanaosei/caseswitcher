@@ -126,7 +126,10 @@ class CaseSwitcher
                 } else {
                     $this->fileExt = '.' . $this->fileExt;
                 }
-                rename("{$this->directory}/{$file}", "{$this->directory}/" . $this->changeCase($this->filename) . $this->fileExt);
+                rename(
+                    "{$this->directory}" . DIRECTORY_SEPARATOR . "{$file}",
+                    "{$this->directory}" . DIRECTORY_SEPARATOR . $this->changeCase($this->filename) . $this->fileExt
+                );
             }
             return true;
         }
@@ -139,7 +142,11 @@ class CaseSwitcher
      */
     private function renameFile() : bool
     {
-        if (rename($this->path, "{$this->directory}/" . $this->changeCase($this->filename) . $this->fileExt)) {
+        if (rename(
+            $this->path,
+            "{$this->directory}" . DIRECTORY_SEPARATOR . $this->changeCase($this->filename) . $this->fileExt
+        )
+            ) {
             return true;
         } else {
             $this->errMsg = 'An unknown error occured. Make sure the path is valid and you have permissions over the file';
