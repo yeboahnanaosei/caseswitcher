@@ -1,0 +1,142 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: roboto, sans-serif;
+    position: relative;
+    box-sizing: border-box;
+    outline: none !important;
+}
+
+body {
+    background: #fff;
+}
+
+.page-info {
+    text-align: center;
+    padding: 20px 500px;
+    background: #f5f5f594;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+    font-size: 16px;
+    line-height: 1.3em;
+    border-bottom: 1px solid rgb(202, 202, 202);
+    color: rgb(75, 70, 70);
+    margin: auto;
+    width: 100%;
+}
+
+form {
+    background: #f5f5f5d3;
+    text-align: center;
+    border: none;
+    border: 1px solid #aaa;
+    width: 600px;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 0 0 50px 0;
+    top: 30px;
+    right: 0;
+    left: 0;
+    margin: 20px auto;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, .15);
+    overflow: hidden;
+}
+
+form > label, input[type=radio] {
+    cursor: pointer;
+}
+
+.window-title {
+    background: rgb(130, 243, 224);
+    color: #000;
+    padding: 15px 0;
+    border: none;
+    border-bottom: 1px solid #aaa;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, .2);
+    margin-bottom: 20px;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.path {
+    padding: 15px;
+    border-radius: 8px;
+    width: 80%;
+    display: inline-block;
+    margin: 5px;
+    font-size: 15px;
+}
+
+.info {
+    display: inline-block;
+    margin-bottom: 8px;
+}
+
+.submit-btn {
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 5px;
+    width: 200px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -o-appearance: none;
+    background: linear-gradient(to bottom, rgb(83, 204, 252), rgb(49, 143, 180));
+    
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+
+.submit-btn:active {
+    background: linear-gradient(to top, rgb(83, 204, 252), rgb(49, 143, 180));
+}
+
+.feedback {
+    text-align: center;
+    width: 600px;
+    margin: 20px auto auto auto;
+    font-size: 18px;
+    color: #fff;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    line-height: 1.5em;
+    cursor: pointer;
+}
+
+/*****************************************************
+* Uncomment the following rules if you want to see   *
+* an arrow to appear on top of the feedback message  *
+*****************************************************/
+
+.feedback::before {
+    content: "";
+    position: absolute;
+    bottom: 99%;
+    right: 0;
+    left: 0;
+    margin: auto;
+    width: 1px;
+    border-style: solid;
+    border-width: 18px;
+    display: none;
+}
+.feedback.error::before {
+    border-color: transparent transparent #e02f2f transparent;
+}
+
+.feedback.success::before {
+    border-color: transparent transparent rgb(130, 243, 224) transparent;
+}
+
+
+.error {
+    background: #e02f2f;
+}
+
+.success {
+    background: rgb(130, 243, 224);
+    color: #000;    
+}
