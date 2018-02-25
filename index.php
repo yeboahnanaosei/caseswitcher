@@ -8,7 +8,7 @@
     <title>CaseSwitcher | It's that simple...</title>
 </head>
 <body>
-<div class="page-info">
+<div class="info-bar">
         <p>
             <b>Case Switcher</b> is a simple script that changes 
             filenames to either lowercase or UPPERCASE<br>
