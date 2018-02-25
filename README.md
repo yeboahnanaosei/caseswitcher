@@ -28,7 +28,6 @@ Consider the situation where you (using a UNIX system - Linux/Mac) and a friend 
 ### TODO:
 - [ ] Recursively go through directories and rename files in child folders
 - [ ] Convert this into a script that can be run from the terminal
-- [ ] Add DocComments
 - [ ] Proper handling of error messages / Convert error messages to exceptions
 - [ ] Go through the contents of each file. Change the case everywhere each affected file has been referenced.
 - [ ] Get a cool logo / icon
