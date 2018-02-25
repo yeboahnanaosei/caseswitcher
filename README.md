@@ -6,7 +6,7 @@
 ![Success Message](./screenshots/2.png)
 
 ## BABY STEPS :baby:
-**Current Version:** 0.1.0-beta
+**Current Version:** 0.1.1-beta
 **Tested on:** Linux (elementary OS) - Should work on UNIX like systems
 
 **CaseSwitcher** is still taking baby steps, so handle with care. This is a beta release. Please **DO NOT** test it on important files or directories. Test it on less critical files and directories.
