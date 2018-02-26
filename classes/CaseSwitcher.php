@@ -36,21 +36,22 @@ class CaseSwitcher
      */
     public function __construct(string $path, string $case = 'lower')
     {
-        $this->path           = realpath($path);
-        $this->caseType       = $case;
+        $this->path            = realpath($path);
+        $this->caseType        = $case;
         $this->restrictedPaths = array_map('realpath', $this->restrictedPaths);
  
         if (is_file($this->path)) {
-            $this->directory = pathinfo($this->path, PATHINFO_DIRNAME);
-            $this->filename  = pathinfo($this->path, PATHINFO_FILENAME);
             $this->resourceType = 'file';
+            $this->directory    = pathinfo($this->path, PATHINFO_DIRNAME);
             
-            $this->fileExt   = pathinfo($this->path, PATHINFO_EXTENSION);
-            if (strlen($this->fileExt) == 0) {
-                $this->fileExt = '';
-            } else {
-                $this->fileExt = '.' . $this->fileExt;
-            }
+            // Get file name and change it to the requested case
+            $this->filename = $this->changeCase(pathinfo($this->path, PATHINFO_FILENAME));
+            
+            // Get file extension of the file
+            // Set extension to empty string if the file has no extension
+            $this->fileExt = pathinfo($this->path, PATHINFO_EXTENSION);
+            $this->fileExt = (empty($this->fileExt)) ? '' : ".{$this->fileExt}";
+
         } elseif (is_dir($this->path)) {
             $this->resourceType = 'dir';
         }
@@ -72,9 +73,15 @@ class CaseSwitcher
         } elseif (!is_writable($this->path)) {
             $this->errMsg = 'NO RIGHTS<br>You don\'t have permissions over this file / directory';
             return false;
-        } else {
-            return true;
+        } elseif ($this->resourceType == 'dir') {
+            // Check if the directory is empty. An empty directory will list two elements "." and ".."
+            if (count(scandir($this->path)) <= 2) {
+                $this->errMsg = 'EMPTY DIRECTORY<br>This is an empty directory. I didn\'t find any files here ';
+                return false;
+            }
         }
+        
+        return true;
     }
 
 
@@ -88,10 +95,11 @@ class CaseSwitcher
         if ($this->isValid()) {
             switch ($this->resourceType) {
                 case 'dir':
-                    return ($this->renameDirContents()) ? true : false;
+                    return $this->renameDirContents();
                     break;
+                    
                 case 'file':
-                    return ($this->renameFile()) ? true : false;
+                    return $this->renameFile();
                     break;
             }
         } else {
@@ -107,33 +115,27 @@ class CaseSwitcher
      */
     private function renameDirContents() : bool
     {
-        if (count(scandir($this->path)) <= 2) {
-            $this->errMsg = 'EMPTY DIRECTORY<br>This is an empty directory. I didn\'t find any files here ';
-            return false;
-        } else {
-            foreach (scandir($this->path) as $file) {
-                if (strpos($file, '.') === 0) {
-                    continue; // Skip '.' and '..' in the directory listing
-                }
-                
-                chdir($this->path);
-                $this->directory = getcwd();
-                $this->filename  = pathinfo($file, PATHINFO_FILENAME);
-                $this->fileExt   = pathinfo($file, PATHINFO_EXTENSION);
-                
-                if (strlen($this->fileExt) == 0) {
-                    $this->fileExt = '';
-                } else {
-                    $this->fileExt = '.' . $this->fileExt;
-                }
-                rename(
-                    "{$this->directory}" . DIRECTORY_SEPARATOR . "{$file}",
-                    "{$this->directory}" . DIRECTORY_SEPARATOR . $this->changeCase($this->filename) . $this->fileExt
-                );
+        foreach (scandir($this->path) as $file) {
+            // Skip '.' and '..' in the directory listing
+            if (strpos($file, '.') === 0) {
+                continue;
             }
-            return true;
+            
+            // Get filename of each file and change to requested case
+            $this->filename = $this->changeCase(pathinfo($file, PATHINFO_FILENAME));
+            
+            // Get extension for each file
+            $this->fileExt  = pathinfo($file, PATHINFO_EXTENSION);
+            $this->fileExt = (empty($this->fileExt)) ? '' : ".{$this->fileExt}";
+            
+            rename(
+                "{$this->path}" . DIRECTORY_SEPARATOR . "{$file}",
+                "{$this->path}" . DIRECTORY_SEPARATOR . "{$this->filename}{$this->fileExt}"
+            );
         }
+        return true;
     }
+
 
     /**
      * Renames a single file if the supplied path points to a single file
@@ -142,14 +144,11 @@ class CaseSwitcher
      */
     private function renameFile() : bool
     {
-        if (rename(
-            $this->path,
-            "{$this->directory}" . DIRECTORY_SEPARATOR . $this->changeCase($this->filename) . $this->fileExt
-        )
-            ) {
+        if (rename($this->path, "{$this->directory}" . DIRECTORY_SEPARATOR . "{$this->filename}{$this->fileExt}")) {
             return true;
         } else {
-            $this->errMsg = 'An unknown error occured. Make sure the path is valid and you have permissions over the file';
+            $this->errMsg =
+            'An unknown error occured. Make sure the path is valid and you have permissions over the file';
             return false;
         }
     }
@@ -166,6 +165,7 @@ class CaseSwitcher
             case 'upper':
                 return strtoupper($fileName);
                 break;
+                
             case 'lower':
                 return strtolower($fileName);
                 break;
