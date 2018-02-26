@@ -30,7 +30,7 @@ $('ignore-field').addEventListener('keyup', e => {
 
     div.className = 'ignore-item';
     div.title = 'double click to delete';
-    div['data-value'] = value.trim();
+    div.dataset.value = value.trim();
 
     div.appendChild(txt);
 
