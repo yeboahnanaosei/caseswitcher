@@ -11,7 +11,7 @@ window.addEventListener('load', function(){
   }
 
   getStrLn($('path'));// on document load
-  $('path').addEventListener('keyup', getStrLn.bind(this), false); //on input key up
+  $('path').addEventListener('input', getStrLn.bind(this), false); //on input key up
 
   var output   = document.querySelector('#feedback');
 
