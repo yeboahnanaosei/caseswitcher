@@ -8,42 +8,46 @@
     <title>CaseSwitcher | It's that simple...</title>
 </head>
 <body>
-<div class="info-bar">
-        <p>
-            <b>Case Switcher</b> is a simple script that changes 
-            filenames to either lowercase or UPPERCASE<br>
-            Just enter the path to the file or directory 
-            you want to change and hit the rename button.
-            <b><i>It's that simple...</i></b>
-        </p>
-    </div>
-    
-    <!-- Form starts -->
-    <form method="POST" action="file-renamer.php" name="rename-form">
-        <h2 class="window-title">Case Switcher <span><i><small>It's that simple...</small></i></span></h2>
-        
-        <!-- Path -->
-        <input type="text" name="path" placeholder="Enter path to file or directory" id="path" class="path" tabindex="1">
-        <br>
-        <br>
-        
-        <!-- Select case type -->
-        <small class="info"><i>(Choose your case)</i></small>
-        <br>
-        <input type="radio" name="case-type" value="lower" id="lower" checked> <label for="lower">lowercase</label> 
-        &nbsp;
-        <input type="radio" name="case-type" value="upper" id="upper"> <label for="upper">UPPERCASE</label>
-        <br>
-        <br>
-        
-        <!-- Submit button -->
-        <input type="submit" name="rename" value="Rename" id="submit-btn" class="submit-btn" tabindex="2">
-    </form>
-    <br>
+  <div class="info-bar">
+    <h1 id="title"><i>CaseSwitcher</i></h1>
+    <p>
+        <b>Case Switcher</b> is a simple script that changes
+        filenames to either lowercase or UPPERCASE<br>
+        Just enter the path to the file or directory
+        you want to change and hit the rename button.
+        <b><i>It's that simple...</i></b>
+    </p>
+  </div>
 
-    <!-- Feedback -->
-    <div><p id='feedback' title="Click to dismiss"></p></div>
-    
+      <!-- Form starts -->
+  <form method="POST" action="file-renamer.php" name="rename-form">
+    <h2 class="window-title">
+      Case Switcher
+      <span><i><small>It's that simple...</small></i></span>
+    </h2>
+
+    <div class="form-group">
+      <input type="text" name="path" placeholder="Enter path to file or directory" id="path" class="path" tabindex="1" autofocus>
+    </div>
+    <div class="form-group">
+      <input type="checkbox" name="sub" id="sub">
+      <label for="sub">With sub folders and files</label>
+    </div>
+
+    <div class="form-group">
+      <label class="info"><i><small>(Choose your case)</small></i></label>
+      <input type="radio" name="case-type" value="lower" id="lower" checked> <label for="lower">lowercase</label>
+      &nbsp;
+      <input type="radio" name="case-type" value="upper" id="upper"> <label for="upper">UPPERCASE</label>
+    </div>
+
+    <!-- Submit button -->
+    <input type="submit" name="rename" value="Rename" id="submit-btn" class="submit-btn" tabindex="2" disabled>
+  </form>
+
+  <!-- Feedback -->
+  <div id="feedback"></div>
+
     <!-- JS and AJAX -->
     <script src="js/main.js"></script>
 </body>
