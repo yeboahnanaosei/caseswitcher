@@ -48,9 +48,7 @@ class CaseSwitcher
             $this->filename = $this->changeCase(pathinfo($this->path, PATHINFO_FILENAME));
             
             // Get file extension of the file
-            // Set extension to empty string if the file has no extension
-            $this->fileExt = pathinfo($this->path, PATHINFO_EXTENSION);
-            $this->fileExt = (empty($this->fileExt)) ? '' : ".{$this->fileExt}";
+            $this->fileExt = $this->getExtension(pathinfo($this->path, PATHINFO_EXTENSION));
 
         } elseif (is_dir($this->path)) {
             $this->resourceType = 'dir';
@@ -67,12 +65,15 @@ class CaseSwitcher
         if (!file_exists($this->path)) {
             $this->errMsg = 'INCORRECT PATH<br>The path you entered does not exist or is incorrect. Please check';
             return false;
+
         } elseif (in_array($this->path, $this->restrictedPaths)) {
             $this->errMsg = 'THE PATH YOU ENTERED IS RESTRICTED<br>You are not allowed to edit any files here';
             return false;
+
         } elseif (!is_writable($this->path)) {
             $this->errMsg = 'NO RIGHTS<br>You don\'t have permissions over this file / directory';
             return false;
+
         } elseif ($this->resourceType == 'dir') {
             // Check if the directory is empty. An empty directory will list two elements "." and ".."
             if (count(scandir($this->path)) <= 2) {
@@ -125,8 +126,7 @@ class CaseSwitcher
             $this->filename = $this->changeCase(pathinfo($file, PATHINFO_FILENAME));
             
             // Get extension for each file
-            $this->fileExt  = pathinfo($file, PATHINFO_EXTENSION);
-            $this->fileExt = (empty($this->fileExt)) ? '' : ".{$this->fileExt}";
+            $this->fileExt  = $this->getExtension(pathinfo($file, PATHINFO_EXTENSION));
             
             rename(
                 "{$this->path}" . DIRECTORY_SEPARATOR . "{$file}",
@@ -180,5 +180,14 @@ class CaseSwitcher
     public function getErrorMsg() : string
     {
         return $this->errMsg;
+    }
+
+    /**
+     *
+     * @return string The extension of the file
+     */
+    private function getExtension($file)
+    {
+        return (empty($file)) ? '' : ".{$file}";
     }
 }
