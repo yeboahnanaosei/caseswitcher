@@ -8,7 +8,7 @@
 }
 
 body {
-    background: #fff;
+    background: #D9D8DF;
 }
 
 .info-bar {
@@ -80,7 +80,7 @@ form > label, input[type=radio] {
     -webkit-appearance: none;
     -o-appearance: none;
     background: linear-gradient(to bottom, rgb(83, 204, 252), rgb(49, 143, 180));
-    
+
     border: none;
     cursor: pointer;
     color: #fff;
@@ -138,5 +138,5 @@ form > label, input[type=radio] {
 
 .success {
     background: rgb(130, 243, 224);
-    color: #000;    
+    color: #000;
 }
