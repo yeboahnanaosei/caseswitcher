@@ -1,12 +1,10 @@
 # CaseSwitcher _It's that simple..._
 ### CaseSwitcher is a tiny system that allows you to change or rename files to lowercase or UPPERCASE by clicking one button. _Its that simple..._  
 
-![Home Screen](./screenshots/1.png)  
-![Error Message](./screenshots/3.png)
-![Success Message](./screenshots/2.png)
+![Home Screen](./screenshots/1.png)
 
 ## BABY STEPS :baby:
-**Current Version:** 0.1.1-beta
+**Current Version:** 0.1.2-beta
 **Tested on:** Linux (elementary OS) - Should work on UNIX like systems
 
 **CaseSwitcher** is still taking baby steps, so handle with care. This is a beta release. Please **DO NOT** test it on important files or directories. Test it on less critical files and directories.

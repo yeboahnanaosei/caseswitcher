@@ -9,7 +9,7 @@
  * PHP 7.0.25+
  *
  * @package CaseSwitcher
- * @version 0.1.1-beta
+ * @version 0.1.2-beta
  * @author  Nana Osei Yeboah <yeboahnanaosei@gmail.com>
  * @link    https://github.com/yeboahnanaosei/case-switcher
  * @license GPLv3.0
