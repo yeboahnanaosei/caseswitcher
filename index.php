@@ -27,7 +27,14 @@
     </h2>
 
     <div class="form-group">
+      <p>File or Folder</p>
       <input type="text" name="path" placeholder="Enter path to file or directory" id="path" class="path" tabindex="1" autofocus>
+    </div>
+    <div class="form-group">
+      <p>Ignore</p>
+      <div class="path" id="ignore">
+        <input type="text" name="ignore" class="ignore" tabindex="1" id="ignore-field">
+      </div>
     </div>
     <div class="form-group">
       <input type="checkbox" name="sub" id="sub">
@@ -49,6 +56,7 @@
   <div id="feedback"></div>
 
     <!-- JS and AJAX -->
+    <script src="js/miniSelectize.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
