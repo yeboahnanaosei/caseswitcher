@@ -39,14 +39,14 @@ class CaseSwitcher
         $this->path            = realpath($path);
         $this->caseType        = $case;
         $this->restrictedPaths = array_map('realpath', $this->restrictedPaths);
- 
+
         if (is_file($this->path)) {
             $this->resourceType = 'file';
             $this->directory    = pathinfo($this->path, PATHINFO_DIRNAME);
-            
+
             // Get file name and change it to the requested case
             $this->filename = $this->changeCase(pathinfo($this->path, PATHINFO_FILENAME));
-            
+
             // Get file extension of the file
             $this->fileExt = $this->getExtension(pathinfo($this->path, PATHINFO_EXTENSION));
 
@@ -81,7 +81,7 @@ class CaseSwitcher
                 return false;
             }
         }
-        
+
         return true;
     }
 
@@ -98,7 +98,7 @@ class CaseSwitcher
                 case 'dir':
                     return $this->renameDirContents();
                     break;
-                    
+
                 case 'file':
                     return $this->renameFile();
                     break;
@@ -121,13 +121,13 @@ class CaseSwitcher
             if (strpos($file, '.') === 0) {
                 continue;
             }
-            
+
             // Get filename of each file and change to requested case
             $this->filename = $this->changeCase(pathinfo($file, PATHINFO_FILENAME));
-            
+
             // Get extension for each file
             $this->fileExt  = $this->getExtension(pathinfo($file, PATHINFO_EXTENSION));
-            
+
             rename(
                 "{$this->path}" . DIRECTORY_SEPARATOR . "{$file}",
                 "{$this->path}" . DIRECTORY_SEPARATOR . "{$this->filename}{$this->fileExt}"
@@ -165,7 +165,7 @@ class CaseSwitcher
             case 'upper':
                 return strtoupper($fileName);
                 break;
-                
+
             case 'lower':
                 return strtolower($fileName);
                 break;
@@ -183,6 +183,7 @@ class CaseSwitcher
     }
 
     /**
+     * Gets the extension of the file
      *
      * @return string The extension of the file
      */
