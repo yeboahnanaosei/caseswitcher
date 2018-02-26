@@ -183,6 +183,7 @@ class CaseSwitcher
     }
 
     /**
+     * Gets the extension of the file
      *
      * @return string The extension of the file
      */

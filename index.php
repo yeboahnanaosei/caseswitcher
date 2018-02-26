@@ -10,7 +10,7 @@
 <body>
 <div class="info-bar">
         <p>
-            <b>Case Switcher</b> is a simple script that changes 
+            <b>CaseSwitcher</b> is a simple script that changes 
             filenames to either lowercase or UPPERCASE<br>
             Just enter the path to the file or directory 
             you want to change and hit the rename button.
@@ -20,7 +20,7 @@
     
     <!-- Form starts -->
     <form method="POST" action="file-renamer.php" name="rename-form">
-        <h2 class="window-title">Case Switcher <span><i><small>It's that simple...</small></i></span></h2>
+        <h2 class="window-title">CaseSwitcher <span><i><small>It's that simple...</small></i></span></h2>
         
         <!-- Path -->
         <input type="text" name="path" placeholder="Enter path to file or directory" id="path" class="path" tabindex="1">
