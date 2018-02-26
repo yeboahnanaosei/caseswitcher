@@ -20,7 +20,7 @@
   </div>
 
       <!-- Form starts -->
-  <form method="POST" action="file-renamer.php" name="rename-form">
+  <form method="POST" action="file-renamer.php" id="rename-form">
     <h2 class="window-title">
       Case Switcher
       <span><i><small>It's that simple...</small></i></span>
@@ -42,7 +42,7 @@
     </div>
 
     <!-- Submit button -->
-    <input type="submit" name="rename" value="Rename" id="submit-btn" class="submit-btn" tabindex="2" disabled>
+    <input type="submit" name="rename" value="Rename" id="submit-btn" class="submit-btn" tabindex="2">
   </form>
 
   <!-- Feedback -->
