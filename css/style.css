@@ -41,7 +41,7 @@ form {
     text-align: center;
     width: 600px;
     height: 420px;
-    top: calc(50% - 150px);
+    top: calc(50% - 200px);
     right: 0;
     left: 0;
     margin: auto;
@@ -117,6 +117,7 @@ input, button, select, option, textarea {
   padding: 5px;
   background-color: #45298E;
   color: white;
+  cursor: pointer;
 }
 
 .ignore {
