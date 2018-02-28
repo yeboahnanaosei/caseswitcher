@@ -32,7 +32,7 @@
     </div>
     <div class="form-group">
       <p>Ignore</p>
-      <div class="path" id="ignore" title="type the text and press ;">
+      <div class="path" id="ignore" title="type the text and press ';'">
         <input type="text" name="ignore" class="ignore" tabindex="1" id="ignore-field">
       </div>
     </div>

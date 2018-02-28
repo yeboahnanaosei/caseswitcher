@@ -1,9 +1,8 @@
 window.addEventListener('load', function(){
-  let
-    $ = id => document.getElementById(id),
-    subBtn = $('submit-btn'),
-    output = $('feedback'),
-    form   = $('rename-form');
+  let $ = id => document.getElementById(id),
+      subBtn = $('submit-btn'),
+      output = $('feedback'),
+      form = $('rename-form');
 
   //change the btn color based on the str length
   function getStrLn(el) {
@@ -22,9 +21,18 @@ window.addEventListener('load', function(){
   // Make an ajax call when the form is submitted
   form.addEventListener('submit', e => {
       e.preventDefault();
-      let path     = $('path').value.trim();
-      let caseType = form['case-type'].value;
 
+      const path = $('path').value.trim();
+      const caseType = form['case-type'].value;
+      const subfolders = $('sub').checked ? 'true' : 'false';
+      const ignored = 
+        [...$('ignore').children]
+        .map(div => {
+          if (div.getAttribute('data-value')) {
+              return div.getAttribute('data-value')
+          }
+        }).filter(data => data);
+            
       output.style.display = 'block';
 
       if (!!!path) return;
@@ -44,7 +52,7 @@ window.addEventListener('load', function(){
           'Hold on... renaming your file(s)';
       }
 
-      request.send(encodeURI("path=" + path + "&case-type=" + caseType));
+      request.send(encodeURI(`path=${path}&case-type=${caseType}&sub-folders=${subfolders}&ignored=${ignored}`));
   });
 
 }, false)
