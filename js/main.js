@@ -22,8 +22,17 @@ window.addEventListener('load', function(){
   // Make an ajax call when the form is submitted
   form.addEventListener('submit', e => {
       e.preventDefault();
-      let path     = $('path').value.trim();
-      let caseType = form['case-type'].value;
+      let path      = $('path').value.trim();
+      let caseType  = form['case-type'].value;
+      let recursion = form['recursion'];
+
+      // See if the user checked the recursion or subfolder option on the form
+      // and set the appropriate value to be sent to the php class
+      if (recursion.checked) {
+          recursion.value = 'true';
+      } else {
+          recursion.value = 'false'
+      }
 
       output.style.display = 'block';
 
@@ -44,7 +53,7 @@ window.addEventListener('load', function(){
           'Hold on... renaming your file(s)';
       }
 
-      request.send(encodeURI("path=" + path + "&case-type=" + caseType));
+      request.send(encodeURI("path=" + path + "&case-type=" + caseType + "&recursion=" + recursion.value));
   });
 
 }, false)
