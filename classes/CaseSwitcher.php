@@ -24,7 +24,7 @@ class CaseSwitcher
     private $directory;
     private $resourceType;      // Is the path a file or a directory
     private $caseType;          // Should the file be renamed to uppercase or lowercase?
-    private $recursion;               
+    private $recursion;
     private $errMsg;
     private $restrictedPaths = ['/', '/home', '/var', __DIR__]; // restricted path on unix file systems
 
@@ -52,7 +52,6 @@ class CaseSwitcher
 
             // Get file extension of the file
             $this->fileExt = $this->getExtension(pathinfo($this->path, PATHINFO_EXTENSION));
-
         } elseif (is_dir($this->path)) {
             $this->resourceType = 'dir';
         }
@@ -68,15 +67,12 @@ class CaseSwitcher
         if (!file_exists($this->path)) {
             $this->errMsg = 'INCORRECT PATH<br>The path you entered does not exist or is incorrect. Please check';
             return false;
-
         } elseif (in_array($this->path, $this->restrictedPaths)) {
             $this->errMsg = 'THE PATH YOU ENTERED IS RESTRICTED<br>You are not allowed to edit any files here';
             return false;
-
         } elseif (!is_writable($this->path)) {
             $this->errMsg = 'NO RIGHTS<br>You don\'t have permissions over this file / directory';
             return false;
-
         } elseif ($this->resourceType == 'dir') {
             // Check if the directory is empty. An empty directory will list two elements "." and ".."
             if (count(scandir($this->path)) <= 2) {

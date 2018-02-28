@@ -2,7 +2,9 @@
 namespace caseswitcher;
 
 include 'classes/CaseSwitcher.php';
-$path = new CaseSwitcher($_POST['path'], $_POST['case-type'], $_POST['recursion']);    // Create a new instance of CaseSwitcher
+
+// Create a new instance of CaseSwitcher
+$path = new CaseSwitcher($_POST['path'], $_POST['case-type'], $_POST['recursion']);
 
 if ($path->rename()) {
     echo "<p class='feedback success' title='click to close'>SUCCESS:<br>Your file was renamed successfully</p>";
