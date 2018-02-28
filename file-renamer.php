@@ -2,7 +2,9 @@
 namespace caseswitcher;
 
 include 'classes/CaseSwitcher.php';
-$path = new CaseSwitcher($_POST['path'], $_POST['case-type']);    // Create a new instance of CaseSwitcher
+
+// Create a new instance of CaseSwitcher
+$path = new CaseSwitcher($_POST['path'], $_POST['case-type'], $_POST['recursion']);
 
 print_r($_POST);
 if ($path->rename()) {
