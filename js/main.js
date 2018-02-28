@@ -1,8 +1,8 @@
-window.addEventListener('load', function(){
+window.addEventListener('load', function () {
   let $ = id => document.getElementById(id),
-      subBtn = $('submit-btn'),
-      output = $('feedback'),
-      form = $('rename-form');
+    subBtn = $('submit-btn'),
+    output = $('feedback'),
+    form = $('rename-form');
 
   //change the btn color based on the str length
   function getStrLn(el) {
@@ -15,44 +15,45 @@ window.addEventListener('load', function(){
 
   // Click to dismiss error message
   output.addEventListener('click', e => {
-      output.style.display = 'none';
+    output.style.display = 'none';
   });
 
   // Make an ajax call when the form is submitted
   form.addEventListener('submit', e => {
-      e.preventDefault();
+    e.preventDefault();
 
-      const path = $('path').value.trim();
-      const caseType = form['case-type'].value;
-      const subfolders = $('sub').checked ? 'true' : 'false';
-      const ignored = 
-        [...$('ignore').children]
+    const path = $('path').value.trim();
+    const caseType = form['case-type'].value;
+    const subfolders = $('sub').checked ? 'true' : 'false';
+    const ignored =
+      [...$('ignore').children]
         .map(div => {
           if (div.getAttribute('data-value')) {
-              return div.getAttribute('data-value')
+            return div.getAttribute('data-value')
           }
         }).filter(data => data);
             
-      output.style.display = 'block';
+    output.style.display = 'block';
 
-      if (!!!path) return;
+    if (!!!path) return;
 
-      const request =
-        XMLHttpRequest ?
+    const request =
+      XMLHttpRequest ?
         new XMLHttpRequest() :
         new ActiveXObject('Microsoft.XMLHTTP');
 
-      request.open('POST', 'file-renamer.php', true);
-      request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    request.open('POST', 'file-renamer.php', true);
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-      request.onload = () => {
-        output.innerHTML =
-          request.status == 200 && request.readyState == 4 ?
+    request.onload = () => {
+      output.innerHTML =
+        request.status == 200 && request.readyState == 4 ?
           request.responseText :
           'Hold on... renaming your file(s)';
-      }
+    }
 
-      request.send(encodeURI(`path=${path}&case-type=${caseType}&sub-folders=${subfolders}&ignored=${ignored}`));
+    request.send(encodeURI(`path=${path}&case-type=${caseType}&sub-folders=${subfolders}&ignored=${ignored}`));
+
   });
 
-}, false)
+}, false);

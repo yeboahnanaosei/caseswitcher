@@ -24,6 +24,7 @@ class CaseSwitcher
     private $directory;
     private $resourceType;      // Is the path a file or a directory
     private $caseType;          // Should the file be renamed to uppercase or lowercase?
+    private $recursion;
     private $errMsg;
     private $restrictedPaths = ['/', '/home', '/var', __DIR__]; // restricted path on unix file systems
 
@@ -33,11 +34,13 @@ class CaseSwitcher
      *
      * @param string $path The path to the resource
      * @param string $case The case to rename the files to. Defaults to 'lower'
+     * @param string $recursion Specifies if subfolders should also be renamed;
      */
-    public function __construct(string $path, string $case = 'lower')
+    public function __construct(string $path, string $case, string $recursion)
     {
         $this->path            = realpath($path);
         $this->caseType        = $case;
+        $this->recursion       = $recursion;
         $this->restrictedPaths = array_map('realpath', $this->restrictedPaths);
 
         if (is_file($this->path)) {
@@ -49,7 +52,6 @@ class CaseSwitcher
 
             // Get file extension of the file
             $this->fileExt = $this->getExtension(pathinfo($this->path, PATHINFO_EXTENSION));
-
         } elseif (is_dir($this->path)) {
             $this->resourceType = 'dir';
         }
@@ -65,15 +67,12 @@ class CaseSwitcher
         if (!file_exists($this->path)) {
             $this->errMsg = 'INCORRECT PATH<br>The path you entered does not exist or is incorrect. Please check';
             return false;
-
         } elseif (in_array($this->path, $this->restrictedPaths)) {
             $this->errMsg = 'THE PATH YOU ENTERED IS RESTRICTED<br>You are not allowed to edit any files here';
             return false;
-
         } elseif (!is_writable($this->path)) {
             $this->errMsg = 'NO RIGHTS<br>You don\'t have permissions over this file / directory';
             return false;
-
         } elseif ($this->resourceType == 'dir') {
             // Check if the directory is empty. An empty directory will list two elements "." and ".."
             if (count(scandir($this->path)) <= 2) {
@@ -95,10 +94,14 @@ class CaseSwitcher
     {
         if ($this->isValid()) {
             switch ($this->resourceType) {
-                case 'dir':
+                case ('dir' && ($this->recursion == 'false')):
                     return $this->renameDirContents();
                     break;
-
+                    
+                case ('dir' && ($this->recursion == 'true')):
+                    return $this->renameDirContentsRecursively();
+                    break;
+                    
                 case 'file':
                     return $this->renameFile();
                     break;
@@ -110,7 +113,9 @@ class CaseSwitcher
 
 
     /**
-     * Rename files inside a directory if the supplied path is a directory
+     * Rename files inside a directory one level deep.
+     * Folders and files that are two levels deep and more
+     * will not be renamed
      *
      * @return bool False if the directory is an empty one
      */
@@ -136,7 +141,39 @@ class CaseSwitcher
         return true;
     }
 
+    
+    /**
+     * Recursively rename all directory contents including subfolders and files
+     *
+     * @return bool
+     */
+    private function renameDirContentsRecursively() : bool
+    {
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($this->path),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+        
+        foreach ($iterator as $file) {
+            // if ($file->isDir()) {
+            //     continue;
+            // }
+            
+            $this->path      = $file->getPathname();
+            $this->directory = $file->getPath();
+            $this->filename  = $this->changeCase(pathinfo($this->path, PATHINFO_FILENAME));
+            $this->fileExt   = $this->getExtension($file->getExtension());
 
+            @rename( //<-- Error suppressor here '@'
+                "{$this->path}",
+                "{$this->directory}" . DIRECTORY_SEPARATOR . "{$this->filename}{$this->fileExt}"
+            );
+        }
+
+        return true;
+    }
+
+    
     /**
      * Renames a single file if the supplied path points to a single file
      *

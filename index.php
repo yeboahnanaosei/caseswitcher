@@ -28,7 +28,7 @@
 
     <div class="form-group">
       <p>File or Folder</p>
-      <input type="text" name="path" placeholder="Enter path to file or directory" id="path" class="path" tabindex="1" autofocus>
+      <input type="text" name="path" placeholder="Enter path to file or directory" id="path" class="path" autofocus>
     </div>
     <div class="form-group">
       <p>Ignore</p>
@@ -36,11 +36,14 @@
         <input type="text" name="ignore" class="ignore" tabindex="1" id="ignore-field">
       </div>
     </div>
+
+    <!-- With subfolders and files -->
     <div class="form-group">
-      <input type="checkbox" name="sub" id="sub">
+      <input type="checkbox" name="recursion" id="sub" value="true">
       <label for="sub">With sub folders and files</label>
     </div>
 
+    <!-- Choose case -->
     <div class="form-group">
       <label class="info"><i><small>(Choose your case)</small></i></label>
       <input type="radio" name="case-type" value="lower" id="lower" checked> <label for="lower">lowercase</label>
@@ -49,7 +52,7 @@
     </div>
 
     <!-- Submit button -->
-    <input type="submit" name="rename" value="Rename" id="submit-btn" class="submit-btn" tabindex="2">
+    <input type="submit" name="rename" value="Rename" id="submit-btn" class="submit-btn">
   </form>
 
   <!-- Feedback -->
