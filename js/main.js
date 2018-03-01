@@ -32,7 +32,7 @@ window.addEventListener('load', function () {
             return div.getAttribute('data-value')
           }
         }).filter(data => data);
-            
+
     output.style.display = 'block';
 
     if (!!!path) return;

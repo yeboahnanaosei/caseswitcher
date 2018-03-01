@@ -20,15 +20,16 @@
   </div>
 
       <!-- Form starts -->
-  <form method="POST" action="file-renamer.php" id="rename-form">
+  <form method="POST" action="file-renamer.php" id="rename-form" enctype="multipart/form-data">
     <h2 class="window-title">
       CaseSwitcher
       <span><i><small>It's that simple...</small></i></span>
     </h2>
 
     <div class="form-group">
-      <p>File or Folder</p>
-      <input type="text" name="path" placeholder="Enter path to file or directory" id="path" class="path" autofocus>
+      <p class="label">Upload a zip file</p>
+      <!-- <input type="text" name="path" placeholder="Enter path to file or directory" id="path" class="path" autofocus> -->
+      <input type="file" name="zip" class="path" accept="application/x-zip-compressed">
     </div>
     <div class="form-group">
       <p>Ignore</p>
