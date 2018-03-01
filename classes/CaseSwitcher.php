@@ -162,6 +162,14 @@ class CaseSwitcher
             $this->path      = $file->getPathname();
             $this->directory = $file->getPath();
             $this->filename  = $this->changeCase(pathinfo($this->path, PATHINFO_FILENAME));
+
+            // If it is a file and it has a dot "." in front of the filename
+            // then its a hidden file. Skip hidden files. Hidden folders are
+            // automatically skipped
+            if (is_file($this->path) && strpos($this->filename, '.') === 0) {
+                continue;
+            }
+            
             $this->fileExt   = $this->getExtension($file->getExtension());
 
             @rename( //<-- Error suppressor here '@'
