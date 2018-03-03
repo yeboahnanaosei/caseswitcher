@@ -37,18 +37,18 @@
       </div>
     </div>
 
-    <!-- With subfolders and files -->
-    <div class="form-group">
-      <input type="checkbox" name="recursion" id="sub" value="true">
-      <label for="sub">With sub folders and files</label>
-    </div>
-
     <!-- Choose case -->
     <div class="form-group">
       <label class="info"><i><small>(Choose your case)</small></i></label>
       <input type="radio" name="case-type" value="lower" id="lower" checked> <label for="lower">lowercase</label>
       &nbsp;
       <input type="radio" name="case-type" value="upper" id="upper"> <label for="upper">UPPERCASE</label>
+    </div>
+
+    <!-- With subfolders and files -->
+    <div class="form-group">
+      <input type="checkbox" name="recursion" id="sub" value="true">
+      <label for="sub">With sub folders and files</label>
     </div>
 
     <!-- Submit button -->
