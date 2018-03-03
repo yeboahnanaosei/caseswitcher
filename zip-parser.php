@@ -1,65 +1,71 @@
 <?php
+namespace caseswitcher;
+include 'classes/CaseSwitcher.php';
+
+
+
 //check if the file has been sent
-print_r($_FILES);
+// print_r($_FILES);
+// print_r($_POST);
 
 // from https://stackoverflow.com/questions/1334613/how-to-recursively-zip-a-directory-in-php
-function Zip($source, $destination)
-{
-    if (!extension_loaded('zip') || !file_exists($source)) {
-        return false;
-    }
-
-    $zip = new ZipArchive();
-    if (!$zip->open($destination, ZIPARCHIVE::CREATE)) {
-        return false;
-    }
-
-    $source = str_replace('\\', '/', realpath($source));
-
-    if (is_dir($source) === true)
-    {
-
-        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST);
-
-        foreach ($files as $file)
-        {
-            $file = str_replace('\\', '/', $file);
-
-            // Ignore "." and ".." folders
-            if( in_array(substr($file, strrpos($file, '/')+1), array('.', '..')) )
-                continue;
-
-            if (is_dir($file) === true)
-            {
-              $dirpath = str_replace($news, ' ', $newf);
-              $zip->addEmptyDir($dirpath);
-            }
-            else if (is_file($file) === true)
-            {
-                $filepath = str_replace($source . '/', '', $file);
-                $zip->addFromString($filepath, file_get_contents($file));
-            }
-        }
-    }
-    else if (is_file($source) === true)
-    {
-        $zip->addFromString(basename($source), file_get_contents($source));
-    }
-
+// function Zip($source, $destination)
+// {
+//     if (!extension_loaded('zip') || !file_exists($source)) {
+//         return false;
+//     }
+//
+//     $zip = new \ZipArchive();
+//     if (!$zip->open($destination, \ZIPARCHIVE::CREATE)) {
+//         return false;
+//     }
+//
+//     $source = str_replace('\\', '/', realpath($source));
+//
+//     if (is_dir($source) === true)
+//     {
+//
+//         $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST);
+//
+//         foreach ($files as $file)
+//         {
+//             $file = str_replace('\\', '/', $file);
+//
+//             // Ignore "." and ".." folders
+//             if( in_array(substr($file, strrpos($file, '/')+1), array('.', '..')) )
+//                 continue;
+//
+//             if (is_dir($file) === true)
+//             {
+//               $dirpath = str_replace($news, ' ', $newf);
+//               $zip->addEmptyDir($dirpath);
+//             }
+//             else if (is_file($file) === true)
+//             {
+//                 $filepath = str_replace($source . '/', '', $file);
+//                 $zip->addFromString($filepath, file_get_contents($file));
+//             }
+//         }
+//     }
+//     else if (is_file($source) === true)
+//     {
+//         $zip->addFromString(basename($source), file_get_contents($source));
+//     }
+//
     // header("Content-Disposition: attachment; filename=\"" . basename($File) . "\"");
     // header("Content-Type: application/force-download");
     // header("Content-Length: " . filesize($File));
     // header("Connection: close");
-
-    return $zip->close();
-}
+//
+//     return $zip->close();
+// }
 
 if(isset($_FILES['zip']) && !empty($_FILES['zip'])) {
   $zipfile = $_FILES['zip'];
   $target_dir = "uploads/";
   $file_name = basename($zipfile["name"]);
   $ok = true;
-  $imageFileType = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+  $ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
 
 
   // Check file size
@@ -69,7 +75,7 @@ if(isset($_FILES['zip']) && !empty($_FILES['zip'])) {
   }
 
   //check if the file is a zip file
-  if(strtolower($imageFileType) !== "zip") {
+  if(strtolower($ext) !== "zip") {
       echo "Sorry, only ZIP file is allowed.";
       $uploadOk = false;
   }
@@ -88,7 +94,7 @@ if(isset($_FILES['zip']) && !empty($_FILES['zip'])) {
     //wait for a created instance of the temp file to be deleted
     // and then create a new
     do {
-      $date = new DateTime();
+      $date = new \DateTime();
       $temp_dir = '~' . $date->getTimestamp() . '/';
     } while (is_dir($temp_dir));
 
@@ -99,12 +105,19 @@ if(isset($_FILES['zip']) && !empty($_FILES['zip'])) {
       if (move_uploaded_file($zipfile["tmp_name"], $istance_path . $file_name)) {
         //file on server
         $uploaed_file = $istance_path . $file_name;
-        $zip = new ZipArchive;
+        $zip = new \ZipArchive;
         if($zip->open($uploaed_file)){
           $unzip_path = $istance_path . basename($uploaed_file, '.zip');
           if($zip->extractTo($unzip_path)) {
             //execute the conversion conditionally
+            // Create a new instance of CaseSwitcher
+            $path = new CaseSwitcher($unzip_path, $_POST['case-type'], $_POST['sub-folders']);
 
+            if ($path->rename()) {
+                // echo "<p class='feedback success' title='click to close'>SUCCESS:<br>Your file was renamed successfully</p>";
+            } else {
+                echo "<p class='feedback error' title='click to close'>FAILURE: {$path->getErrorMsg()}</p>";
+            }
             // then
 
             // Get real path for our folder
@@ -115,8 +128,8 @@ if(isset($_FILES['zip']) && !empty($_FILES['zip'])) {
                 return false;
             }
 
-            $zip = new ZipArchive();
-            if (!$zip->open($destination, ZIPARCHIVE::CREATE)) {
+            $zip = new \ZipArchive();
+            if (!$zip->open($destination, \ZIPARCHIVE::CREATE)) {
                 return false;
             }
 
@@ -125,7 +138,7 @@ if(isset($_FILES['zip']) && !empty($_FILES['zip'])) {
             if (is_dir($source) === true)
             {
 
-                $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($source), RecursiveIteratorIterator::SELF_FIRST);
+                $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($source), \RecursiveIteratorIterator::SELF_FIRST);
 
                 foreach ($files as $file)
                 {
@@ -155,6 +168,8 @@ if(isset($_FILES['zip']) && !empty($_FILES['zip'])) {
 
 
             if($zip->close()) {
+              echo $destination;
+              header('location: download.php?dest=' . $destination. '&dir='.realpath($istance_path));
 
               // send the zip to js : its store in $destination
             }

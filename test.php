@@ -7,9 +7,18 @@
     <title></title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+    <style media="screen">
+        .h1 {
+          color: red;
+        }
+        [data-nana="mat"] {
+          color: blue;
+        }
+    </style>
   </head>
   <body>
-    <h1>Hello, world!</h1>
+
+    <h1 class="h1" data-extends-ui="mat">Hello, world!</h1>
     <form method="POST" action="zip-parser.php" id="rename-form" enctype="multipart/form-data">
       <h2 class="window-title">
         CaseSwitcher
@@ -30,7 +39,7 @@
 
       <!-- With subfolders and files -->
       <div class="form-group">
-        <input type="checkbox" name="recursion" id="sub" value="true">
+        <input type="checkbox" name="sub-folders" id="sub" value="true">
         <label for="sub">With sub folders and files</label>
       </div>
 

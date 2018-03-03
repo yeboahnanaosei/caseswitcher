@@ -1,0 +1,6 @@
+[data-extends-ui="mat"]{
+}
+
+.btn[data-extends-ui="mat"]{
+  border-radius: 0;
+}
