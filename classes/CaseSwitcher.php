@@ -19,9 +19,6 @@ namespace caseswitcher;
 class CaseSwitcher
 {
     private $path;
-    private $filename;
-    private $fileExt;
-    private $directory;
     private $resourceType;      // Is the path a file or a directory
     private $caseType;          // Should the file be renamed to uppercase or lowercase?
     private $recursion;
@@ -36,24 +33,20 @@ class CaseSwitcher
      * @param string $case The case to rename the files to. Defaults to 'lower'
      * @param string $recursion Specifies if subfolders should also be renamed;
      */
-    public function __construct(string $path, string $case, string $recursion)
+    public function __construct(string $path, string $case = 'lower', string $recursion = 'false')
     {
         $this->path            = realpath($path);
         $this->caseType        = $case;
         $this->recursion       = $recursion;
         $this->restrictedPaths = array_map('realpath', $this->restrictedPaths);
 
-        if (is_file($this->path)) {
-            $this->resourceType = 'file';
-            $this->directory    = pathinfo($this->path, PATHINFO_DIRNAME);
-
-            // Get file name and change it to the requested case
-            $this->filename = $this->changeCase(pathinfo($this->path, PATHINFO_FILENAME));
-
-            // Get file extension of the file
-            $this->fileExt = $this->getExtension(pathinfo($this->path, PATHINFO_EXTENSION));
-        } elseif (is_dir($this->path)) {
-            $this->resourceType = 'dir';
+        switch (true) {
+            case is_file($this->path):
+                $this->resourceType = 'file';
+                break;
+            case is_dir($this->path):
+                $this->resourceType = 'dir';
+                break;
         }
     }
 
@@ -80,7 +73,6 @@ class CaseSwitcher
                 return false;
             }
         }
-
         return true;
     }
 
@@ -94,14 +86,10 @@ class CaseSwitcher
     {
         if ($this->isValid()) {
             switch ($this->resourceType) {
-                case ('dir' && ($this->recursion == 'false')):
-                    return $this->renameDirContents();
+                case 'dir':
+                    return $this->renameDir();
                     break;
-                    
-                case ('dir' && ($this->recursion == 'true')):
-                    return $this->renameDirContentsRecursively();
-                    break;
-                    
+
                 case 'file':
                     return $this->renameFile();
                     break;
@@ -111,77 +99,6 @@ class CaseSwitcher
         }
     }
 
-
-    /**
-     * Rename files inside a directory one level deep.
-     * Folders and files that are two levels deep and more
-     * will not be renamed
-     *
-     * @return bool False if the directory is an empty one
-     */
-    private function renameDirContents() : bool
-    {
-        foreach (scandir($this->path) as $file) {
-            // Skip '.' and '..' in the directory listing
-            if (strpos($file, '.') === 0) {
-                continue;
-            }
-
-            // Get filename of each file and change to requested case
-            $this->filename = $this->changeCase(pathinfo($file, PATHINFO_FILENAME));
-
-            // Get extension for each file
-            $this->fileExt  = $this->getExtension(pathinfo($file, PATHINFO_EXTENSION));
-
-            rename(
-                "{$this->path}" . DIRECTORY_SEPARATOR . "{$file}",
-                "{$this->path}" . DIRECTORY_SEPARATOR . "{$this->filename}{$this->fileExt}"
-            );
-        }
-        return true;
-    }
-
-    
-    /**
-     * Recursively rename all directory contents including subfolders and files
-     *
-     * @return bool
-     */
-    private function renameDirContentsRecursively() : bool
-    {
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($this->path),
-            \RecursiveIteratorIterator::CHILD_FIRST
-        );
-        
-        foreach ($iterator as $file) {
-            // if ($file->isDir()) {
-            //     continue;
-            // }
-            
-            $this->path      = $file->getPathname();
-            $this->directory = $file->getPath();
-            $this->filename  = $this->changeCase(pathinfo($this->path, PATHINFO_FILENAME));
-
-            // If it is a file and it has a dot "." in front of the filename
-            // then its a hidden file. Skip hidden files. Hidden folders are
-            // automatically skipped
-            if (is_file($this->path) && strpos($this->filename, '.') === 0) {
-                continue;
-            }
-            
-            $this->fileExt   = $this->getExtension($file->getExtension());
-
-            @rename( //<-- Error suppressor here '@'
-                "{$this->path}",
-                "{$this->directory}" . DIRECTORY_SEPARATOR . "{$this->filename}{$this->fileExt}"
-            );
-        }
-
-        return true;
-    }
-
-    
     /**
      * Renames a single file if the supplied path points to a single file
      *
@@ -189,7 +106,13 @@ class CaseSwitcher
      */
     private function renameFile() : bool
     {
-        if (rename($this->path, "{$this->directory}" . DIRECTORY_SEPARATOR . "{$this->filename}{$this->fileExt}")) {
+        $file = new \SplFileInfo($this->path);
+        $oldFile   = $file->getPathName();
+        $directory = $file->getPath();
+        $filename  = $this->changeCase(pathinfo($file->getFilename(), PATHINFO_FILENAME));
+        $fileExt   = $this->getExtension($file->getExtension());
+
+        if (rename($oldFile, "{$directory}" . DIRECTORY_SEPARATOR . "{$filename}{$fileExt}")) {
             return true;
         } else {
             $this->errMsg =
@@ -199,9 +122,39 @@ class CaseSwitcher
     }
 
     /**
+     * Rename contents of a directory either one level deep or recursively
+     *
+     * @return bool True if the renaming succeeds
+     */
+    private function renameDir()
+    {
+        switch ($this->recursion) {
+            case 'true':
+                $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($this->path),
+                \RecursiveIteratorIterator::CHILD_FIRST
+                );
+                break;
+
+            case 'false':
+                $iterator = new \DirectoryIterator($this->path);
+                break;
+        }
+
+        foreach ($iterator as $file) {
+            $oldFile   = $file->getPathName();
+            $directory = $file->getPath();
+            $filename  = $this->changeCase(pathinfo($file->getFilename(), PATHINFO_FILENAME));
+            $fileExt   = $this->getExtension($file->getExtension());
+            @rename($oldFile, "{$directory}" . DIRECTORY_SEPARATOR. "{$filename}{$fileExt}");
+        }
+        return true;
+    }
+
+    /**
      * Converts filename to the requested case
      *
-     * @param string Name of the file
+     * @param string $fileName Name of the file
      * @return string The converted version of the filename
      */
     private function changeCase($fileName) : string
@@ -216,6 +169,16 @@ class CaseSwitcher
                 break;
         }
     }
+    /**
+     * Gets the extension of the file
+     *
+     * @return string The extension of the file
+     */
+    private function getExtension($file)
+    {
+        return (empty($file)) ? '' : ".{$file}";
+    }
+
 
     /**
      * Get error message
@@ -225,15 +188,5 @@ class CaseSwitcher
     public function getErrorMsg() : string
     {
         return $this->errMsg;
-    }
-
-    /**
-     * Gets the extension of the file
-     *
-     * @return string The extension of the file
-     */
-    private function getExtension($file)
-    {
-        return (empty($file)) ? '' : ".{$file}";
     }
 }
