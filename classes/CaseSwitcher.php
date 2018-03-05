@@ -111,8 +111,9 @@ class CaseSwitcher
         $directory = $file->getPath();
         $filename  = $this->changeCase(pathinfo($file->getFilename(), PATHINFO_FILENAME));
         $fileExt   = $this->getExtension($file->getExtension());
-
-        if (rename($oldFile, "{$directory}" . DIRECTORY_SEPARATOR . "{$filename}{$fileExt}")) {
+        $newFile   = "{$directory}" . DIRECTORY_SEPARATOR. "{$filename}{$fileExt}";
+        
+        if (rename($oldFile, $newFile)) {
             return true;
         } else {
             $this->errMsg =
@@ -146,7 +147,8 @@ class CaseSwitcher
             $directory = $file->getPath();
             $filename  = $this->changeCase(pathinfo($file->getFilename(), PATHINFO_FILENAME));
             $fileExt   = $this->getExtension($file->getExtension());
-            @rename($oldFile, "{$directory}" . DIRECTORY_SEPARATOR. "{$filename}{$fileExt}");
+            $newFile   = "{$directory}" . DIRECTORY_SEPARATOR. "{$filename}{$fileExt}";
+            @rename($oldFile, $newFile);
         }
         return true;
     }
