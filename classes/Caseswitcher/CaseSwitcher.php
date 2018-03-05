@@ -24,14 +24,14 @@ class CaseSwitcher
     private $recursion;
     private $errMsg;
     private $restrictedPaths = ['/', '/home', '/var', __DIR__]; // restricted path on unix file systems
-
+    
 
     /**
      * Constructor
      *
      * @param string $path The path to the resource
      * @param string $case The case to rename the files to. Defaults to 'lower'
-     * @param string $recursion Specifies if subfolders should also be renamed;
+     * @param string $recursion Specifies if subfolders should also be renamed. Defaults to 'false'
      */
     public function __construct(string $path, string $case = 'lower', string $recursion = 'false')
     {
@@ -43,6 +43,8 @@ class CaseSwitcher
         switch (true) {
             case is_file($this->path):
                 $this->resourceType = 'file';
+                // Create a new instance of SplFileInfo once the path links to a file.
+                $this->path = new \SplFileInfo($this->path);
                 break;
             case is_dir($this->path):
                 $this->resourceType = 'dir';
@@ -98,6 +100,7 @@ class CaseSwitcher
             return false;
         }
     }
+    
 
     /**
      * Renames a single file if the supplied path points to a single file
@@ -106,22 +109,18 @@ class CaseSwitcher
      */
     private function renameFile() : bool
     {
-        $file = new \SplFileInfo($this->path);
-        $oldFile   = $file->getPathName();
-        $directory = $file->getPath();
-        $filename  = $this->changeCase(pathinfo($file->getFilename(), PATHINFO_FILENAME));
-        $fileExt   = $this->getExtension($file->getExtension());
-        $newFile   = "{$directory}" . DIRECTORY_SEPARATOR. "{$filename}{$fileExt}";
+        $oldName = $this->getOldName($this->path);
+        $newName = $this->getNewName($this->path);
         
-        if (rename($oldFile, $newFile)) {
+        if (rename($oldName, $newName)) {
             return true;
         } else {
-            $this->errMsg =
-            'An unknown error occured. Make sure the path is valid and you have permissions over the file';
+            $this->errMsg = 'An unknown error occured. Make sure the path is valid and you have permissions over the file';
             return false;
         }
     }
 
+    
     /**
      * Rename contents of a directory either one level deep or recursively
      *
@@ -143,16 +142,14 @@ class CaseSwitcher
         }
 
         foreach ($iterator as $file) {
-            $oldFile   = $file->getPathName();
-            $directory = $file->getPath();
-            $filename  = $this->changeCase(pathinfo($file->getFilename(), PATHINFO_FILENAME));
-            $fileExt   = $this->getExtension($file->getExtension());
-            $newFile   = "{$directory}" . DIRECTORY_SEPARATOR. "{$filename}{$fileExt}";
-            @rename($oldFile, $newFile);
+            $oldName = $this->getOldName($file);
+            $newName = $this->getNewName($file);
+            @rename($oldName, $newName);
         }
         return true;
     }
 
+    
     /**
      * Converts filename to the requested case
      *
@@ -171,6 +168,8 @@ class CaseSwitcher
                 break;
         }
     }
+
+    
     /**
      * Gets the extension of the file
      *
@@ -190,5 +189,34 @@ class CaseSwitcher
     public function getErrorMsg() : string
     {
         return $this->errMsg;
+    }
+
+    
+    /**
+     * Generate the new name of the file being renamed. This will be used by the
+     * rename() function.
+     * 
+     * @param SplFileInfo $file. The file to be renamed will be an instance of SplFileInfo
+     * @return string. The new name of the file after it has been renamed
+     */
+    private function getNewName(\SplFileInfo $file) : string
+    {
+        $directory = $file->getPath();
+        $filename  = $this->changeCase(pathinfo($file->getFilename(), PATHINFO_FILENAME));
+        $fileExt   = $this->getExtension($file->getExtension());
+        return "{$directory}" . DIRECTORY_SEPARATOR. "{$filename}{$fileExt}";
+    }
+
+
+    /**
+     * Generate the old name of the file being renamed. This will be used by the
+     * rename() function.
+     * 
+     * @param SplFileInfo $file. The file to be renamed will be an instance of SplFileInfo
+     * @return string The old name of the file before it was renamed.
+     */
+    private function getOldName(\SplFileInfo $file) : string
+    {
+        return $file->getPathName();
     }
 }
