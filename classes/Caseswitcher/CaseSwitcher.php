@@ -14,7 +14,7 @@
  * @link    https://github.com/yeboahnanaosei/case-switcher
  * @license GPLv3.0
  */
-namespace caseswitcher;
+namespace Caseswitcher;
 
 class CaseSwitcher
 {

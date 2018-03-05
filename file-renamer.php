@@ -1,7 +1,9 @@
 <?php
-namespace caseswitcher;
+namespace Caseswitcher;
 
-include 'classes/CaseSwitcher.php';
+spl_autoload_register(function($class) {
+   include  __DIR__ . '/classes/' . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
+});
 
 // Create a new instance of CaseSwitcher
 $path = new CaseSwitcher($_POST['path'], $_POST['case-type'], $_POST['sub-folders']);
