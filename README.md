@@ -14,7 +14,7 @@
 PHP Version: 7.0.25+
 
 ### USE CASE
-Consider the situation where you (using a UNIX system - Linux/Mac) and a friend on a Windows system sends you an project to work on. You open the folder and you realize that all the files are in uppercase or title case. However, within the code, all files were referenced in lowercase. This is not a problem on Windows with Windows being case-insensitve operation system. This will however be problematic for a UNIX user because UNIX file system is case sensitive. This will mean that you will have to carefully change the file names to lowercase for your system. In such a situation, **CaseSwitcher** is your best friend.
+Consider the situation where you (using a UNIX system - Linux/Mac) and a friend on a Windows system sends you an project to work on. You open the folder and you realize that all the files are in uppercase or title case. However, within the code, all files were referenced in lowercase. This is not a problem on Windows with Windows being case-insensitive operation system. This will however be problematic for a UNIX user because UNIX file system is case sensitive. This will mean that you will have to carefully change the file names to lowercase for your system. In such a situation, **CaseSwitcher** is your best friend.
 
 ### LET'S AGREE ON THESE :punch:
 - **CODING STYLE:** [PSR-1](https://www.php-fig.org/psr/psr-1/) and [PSR-2](https://www.php-fig.org/psr/psr-2/)
